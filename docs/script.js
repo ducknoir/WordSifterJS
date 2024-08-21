@@ -4,7 +4,6 @@ class WordleSifter {
         this._blacks = new Set();
         this._yellows = Array.from({ length: 5 }, () => new Set());
         this._greens = Array(5).fill(null);
-        this._excludes = this._yellows.map(yellows_set => new Set([...this._blacks, ...yellows_set]));
     }
 
     updateGameState(guess, feedback) {
@@ -19,22 +18,24 @@ class WordleSifter {
                 this._blacks.add(letter);
             }
         });
-
-        this._excludes = this._yellows.map(yellows_set => new Set([...this._blacks, ...yellows_set]));
     }
 
     get filteredWords() {
         let greensRegexStr = `^${this._greens.map(letter => letter || '.').join('')}$`
         let greensRegex = new RegExp(greensRegexStr);
-        let blacksRegexStr = `^${this._excludes.map(exclude_set => exclude_set.size ? `[^${[...exclude_set].join('')}]` : '.').join('')}$`
-        let blacksRegex = new RegExp(blacksRegexStr);
+
+        // For each letter position, combine the blacks and yellows to make a full set
+        // of letters to exclude for that position
+        let combinedExcludes = this._yellows.map(yellows_set => new Set([...this._blacks, ...yellows_set]));
+        let excludesRegexParts = combinedExcludes.map(excludeSet => excludeSet.size ? `[^${[...excludeSet].join('')}]` : '.');
+        let excludesRegex = new RegExp(`^${excludesRegexParts.join('')}$`);
 
         // Create a set of all unique yellow letters from all positions
         const yellowChars = [...new Set(this._yellows.flatMap(set => [...set]))];
 
         let filters = [
             word => greensRegex.test(word),
-            word => blacksRegex.test(word),
+            word => excludesRegex.test(word),
             word => yellowChars.every(char => word.includes(char))
         ];
 
