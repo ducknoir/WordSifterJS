@@ -1,4 +1,4 @@
-class WordleSifter {
+class WordSifter {
     constructor(words) {
         this._all_words = words;
         this._blacks = new Set();
@@ -99,7 +99,7 @@ function resetApp() {
         .then(response => response.json())
         .then(data => {
             // Reset the sifter state
-            const sifter = new WordleSifter(data.words);
+            const sifter = new WordSifter(data.words);
             // Update the display to the full word liet
             displayWords(sifter.filteredWords);
             // Re-attach the update handler
