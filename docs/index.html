@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Sifter</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Wordle Sifter</h1>
+    <div>
+        <label for="guess">Enter your guess:</label>
+        <input type="text" id="guess" maxlength="5">
+    </div>
+    <div>
+        <label for="feedback">Enter feedback (g for green, y for yellow, b for black):</label>
+        <input type="text" id="feedback" maxlength="5">
+    </div>
+    <div>
+        <button onclick="updateSifter()">Update</button>
+        <button onclick="resetApp()">Reset</button>
+    </div>
+
+    <h2 id="word-count">Filtered Words:</h2>
+    <ul id="filtered-words">
+        <!-- Filtered words will appear here -->
+    </ul>
+</body>
+</html>
