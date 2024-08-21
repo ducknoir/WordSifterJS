@@ -8,6 +8,7 @@ class WordleSifter {
 
     updateGameState(guess, feedback) {
         guess = guess.trim().toLowerCase();
+        feedback = feedback.trim().toLowerCase();
         feedback.split('').forEach((color, i) => {
             let letter = guess[i];
             if (color === 'g') {
