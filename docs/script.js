@@ -138,3 +138,10 @@ fetch('words.json')
     .catch(error => {
         console.error('Error loading word list:', error);
     });
+
+window.addEventListener('focus', function() {
+    console.log('Window focused');
+    guessInputElement = document.getElementById('guess');
+    guessInputElement.focus();
+    guessInputElement.select();
+});
