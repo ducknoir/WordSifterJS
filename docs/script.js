@@ -146,15 +146,5 @@ fetch('words.json')
         console.error('Error loading word list:', error);
     });
 
-document.getElementById('guess').addEventListener('focus', function() {
-    document.getElementById('guess').select();
-});
-
-document.getElementById('feedback').addEventListener('focus', function() {
-    document.getElementById('feedback').select();
-});
-
-// When window comes into focus, put focus on "Guess" input and select its contents
-window.addEventListener('focus', function() {
-    document.getElementById('guess').focus();
-});
+document.getElementById('guess').addEventListener('focus', function() {this.select();});
+document.getElementById('feedback').addEventListener('focus', function() {this.select();});
