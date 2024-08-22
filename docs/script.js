@@ -133,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
             updateSifter();
         }
     });
+
+    document.getElementById('guess').addEventListener('focus', function() {this.select();});
+    document.getElementById('feedback').addEventListener('focus', function() {this.select();});
 });
 
 // Fetch the word list from the JSON file
@@ -145,6 +148,3 @@ fetch('words.json')
     .catch(error => {
         console.error('Error loading word list:', error);
     });
-
-document.getElementById('guess').addEventListener('focus', function() {this.select();});
-document.getElementById('feedback').addEventListener('focus', function() {this.select();});
