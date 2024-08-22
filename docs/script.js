@@ -116,26 +116,41 @@ function resetApp() {
         });
 }
 
+function validateInputs(guess, feedback) {
+    return guess.length === 5 && feedback.length === 5;
+}
+
 // We want updateSifter to be called if the user presses Enter
 // with keyboard focus on either of the input fields
 document.addEventListener('DOMContentLoaded', function () {
     const guessInput = document.getElementById('guess');
     const feedbackInput = document.getElementById('feedback');
+    const updateButton = document.getElementById('updateButton');
 
     guessInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             updateSifter();
         }
     });
+    guessInput.addEventListener('focus', function() {this.select();});
 
     feedbackInput.addEventListener('keypress', function (event) {
         if (event.key === 'Enter') {
             updateSifter();
         }
     });
+    feedbackInput.addEventListener('focus', function() {this.select();});
 
-    document.getElementById('guess').addEventListener('focus', function() {this.select();});
-    document.getElementById('feedback').addEventListener('focus', function() {this.select();});
+    function validateInputsHandler() {
+        const guessValue = guessInput.value.trim();
+        const feedbackValue = feedbackInput.value.trim();
+
+        // Simple validation example: check if both fields are non-empty
+        updateButton.disabled = !validateInputs(guessValue, feedbackValue);
+    }
+
+    guessInput.addEventListener('input', validateInputsHandler);
+    feedbackInput.addEventListener('input', validateInputsHandler);
 });
 
 // Fetch the word list from the JSON file

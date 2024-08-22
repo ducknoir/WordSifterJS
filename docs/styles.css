@@ -55,6 +55,13 @@ button:hover {
     background-color: #0056b3;
 }
 
+button:disabled {
+    background-color: #cccccc; /* Light gray for disabled state */
+    color: #666666; /* Muted text color */
+    cursor: default;
+    opacity: 0.6; /* Slightly transparent to indicate disabled */
+}
+
 /* Flexbox for buttons */
 .button-group {
     display: flex;
