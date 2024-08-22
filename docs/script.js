@@ -4,43 +4,50 @@ class WordSifter {
         this._blacks = new Set();
         this._yellows = Array.from({ length: 5 }, () => new Set());
         this._greens = Array(5).fill(null);
+        this._have_filter = false; 
     }
 
     updateGameState(guess, feedback) {
-        guess = guess.trim().toLowerCase();
-        feedback = feedback.trim().toLowerCase();
-        feedback.split('').forEach((color, i) => {
-            let letter = guess[i];
-            if (color === 'g') {
-                this._greens[i] = letter;
-            } else if (color === 'y') {
-                this._yellows[i].add(letter);
-            } else if (color === 'b' && !this._greens.includes(letter) && !this._yellows.some(set => set.has(letter))) {
-                this._blacks.add(letter);
-            }
-        });
+        if (guess && feedback) {
+            guess = guess.trim().toLowerCase();
+            feedback = feedback.trim().toLowerCase();
+            feedback.split('').forEach((color, i) => {
+                let letter = guess[i];
+                if (color === 'g') {
+                    this._greens[i] = letter;
+                } else if (color === 'y') {
+                    this._yellows[i].add(letter);
+                } else if (color === 'b' && !this._greens.includes(letter) && !this._yellows.some(set => set.has(letter))) {
+                    this._blacks.add(letter);
+                }
+            });
+            this._have_filter = true;
+        }
     }
 
     get filteredWords() {
-        let greensRegexStr = `^${this._greens.map(letter => letter || '.').join('')}$`
-        let greensRegex = new RegExp(greensRegexStr);
+        let filtered = this._all_words
+        if (this._have_filter) {
+            let greensRegexStr = `^${this._greens.map(letter => letter || '.').join('')}$`
+            let greensRegex = new RegExp(greensRegexStr);
 
-        // For each letter position, combine the blacks and yellows to make a full set
-        // of letters to exclude for that position
-        let combinedExcludes = this._yellows.map(yellows_set => new Set([...this._blacks, ...yellows_set]));
-        let excludesRegexParts = combinedExcludes.map(excludeSet => excludeSet.size ? `[^${[...excludeSet].join('')}]` : '.');
-        let excludesRegex = new RegExp(`^${excludesRegexParts.join('')}$`);
+            // For each letter position, combine the blacks and yellows to make a full set
+            // of letters to exclude for that position
+            let combinedExcludes = this._yellows.map(yellows_set => new Set([...this._blacks, ...yellows_set]));
+            let excludesRegexParts = combinedExcludes.map(excludeSet => excludeSet.size ? `[^${[...excludeSet].join('')}]` : '.');
+            let excludesRegex = new RegExp(`^${excludesRegexParts.join('')}$`);
 
-        // Create a set of all unique yellow letters from all positions
-        const yellowChars = [...new Set(this._yellows.flatMap(set => [...set]))];
+            // Create a set of all unique yellow letters from all positions
+            const yellowChars = [...new Set(this._yellows.flatMap(set => [...set]))];
 
-        let filters = [
-            word => greensRegex.test(word),
-            word => excludesRegex.test(word),
-            word => yellowChars.every(char => word.includes(char))
-        ];
+            let filters = [
+                word => greensRegex.test(word),
+                word => excludesRegex.test(word),
+                word => yellowChars.every(char => word.includes(char))
+            ];
 
-        let filtered = this._all_words.filter(word => filters.every(f => f(word)));
+            filtered = filtered.filter(word => filters.every(f => f(word)));
+        }
         return filtered
     }
 }
@@ -67,7 +74,7 @@ function displayWords(words) {
     const wordCountHeading = document.getElementById('word-count');
 
     // Update the word count in the heading
-    wordCountHeading.textContent = `${words.length} Filtered Words:`;
+    wordCountHeading.textContent = `${words.length} Words:`;
 
     filteredWordsList.innerHTML = '';
     words.forEach(word => {
@@ -139,8 +146,8 @@ fetch('words.json')
         console.error('Error loading word list:', error);
     });
 
+// When window comes into focus, put focus on "Guess" input and select its contents
 window.addEventListener('focus', function() {
-    console.log('Window focused');
     guessInputElement = document.getElementById('guess');
     guessInputElement.focus();
     guessInputElement.select();

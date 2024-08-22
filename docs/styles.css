@@ -1,17 +1,16 @@
 /* styles.css */
 
-/* General styling */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 10px;
     background-color: #f9f9f9;
 }
 
 /* Header styling */
 h1 {
     color: #333;
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: left;
+    margin-bottom: 20px;
 }
 
 /* Form input styling */
@@ -25,7 +24,21 @@ input[type="text"] {
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100px;
+    width: 60px;
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Flexbox for form groups */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Space between form groups */
+}
+
+.form-group input {
+    flex: 1; /* Allow the input to grow if there's space */
 }
 
 /* Button styling */
@@ -42,15 +55,23 @@ button:hover {
     background-color: #0056b3;
 }
 
-/* Filtered words list styling */
+/* Flexbox for buttons */
+.button-group {
+    display: flex;
+    gap: 10px; /* Space between the buttons */
+    margin-top: 20px; /* Space above the buttons */
+}
 ul {
     list-style-type: none;
     padding-left: 0;
+    column-width: 50px; /* Fixed width for each column */
+    column-gap: 10px;    /* Space between the columns */
 }
 
 ul li {
-    background-color: #e7f3ff;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 4px;
+    border-width: 1;
+    text-transform: uppercase;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.1em;
 }
