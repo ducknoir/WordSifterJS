@@ -9,15 +9,15 @@ class WordSifter {
 
     updateGameState(guess, feedback) {
         if (guess && feedback) {
-            guess = guess.trim().toLowerCase();
-            feedback = feedback.trim().toLowerCase();
+            guess = guess.trim().toUpperCase();
+            feedback = feedback.trim().toUpperCase();
             feedback.split('').forEach((color, i) => {
                 let letter = guess[i];
-                if (color === 'g') {
+                if (color === 'G') {
                     this._greens[i] = letter;
-                } else if (color === 'y') {
+                } else if (color === 'Y') {
                     this._yellows[i].add(letter);
-                } else if (color === 'b' && !this._greens.includes(letter) && !this._yellows.some(set => set.has(letter))) {
+                } else if (color === 'B' && !this._greens.includes(letter) && !this._yellows.some(set => set.has(letter))) {
                     this._blacks.add(letter);
                 }
             });

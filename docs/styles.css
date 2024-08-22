@@ -64,13 +64,12 @@ button:hover {
 ul {
     list-style-type: none;
     padding-left: 0;
-    column-width: 50px; /* Fixed width for each column */
-    column-gap: 10px;    /* Space between the columns */
+    column-width: 50px;
+    column-gap: 10px;
 }
 
 ul li {
     border-width: 1;
-    text-transform: uppercase;
     font-family: monospace;
     font-weight: bold;
     font-size: 1.1em;
