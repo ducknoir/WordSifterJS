@@ -101,6 +101,8 @@ function resetApp() {
     guessInput.value = '';
     feedbackInput.value = '';
 
+    document.getElementById('updateButton').disabled = true;
+
     // Re-initialize the sifter to its original state, then update the diaplay
     fetch('words.json')
         .then(response => response.json())
@@ -117,7 +119,19 @@ function resetApp() {
 }
 
 function validateInputs(guess, feedback) {
-    return guess.length === 5 && feedback.length === 5;
+    guessArr = guess.trim().toUpperCase().split('')
+    feedbackArr = feedback.trim().toUpperCase().split('')
+
+    const ASCII_CODE_A = 65;
+    const guessAllowed = Array.from({ length: 26 }, (_, i) => String.fromCharCode(ASCII_CODE_A + i));
+    let feedbackAllowed = ['B', 'Y', 'G']
+
+    let valid = guess.length === 5
+     && feedback.length === 5
+     && guessArr.every(char => guessAllowed.includes(char))
+     && feedbackArr.every(char => feedbackAllowed.includes(char));
+
+     return valid
 }
 
 // We want updateSifter to be called if the user presses Enter
