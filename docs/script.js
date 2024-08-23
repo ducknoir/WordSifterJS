@@ -55,17 +55,14 @@ class WordSifter {
 // Called when user clicks "Update", or presses Enter, after entering guess and feedback
 // Reads the new guess and feedback from the DOM, updates the sifter state, gets the
 // updated filtered list, and pushes the updated list back to the display.
+// Assumes input has already been validated.
 function handleUpdate (sifter) {
     const guess = document.getElementById('guess').value;
     const feedback = document.getElementById('feedback').value;
 
-    if (validate(guess, feedback)) {
-        sifter.updateGameState(guess, feedback);
-        const words_list = sifter.filteredWords;
-        displayWords(words_list);
-    } else {
-        alert('Please enter a valid 5-letter guess and feedback.');
-    }
+    sifter.updateGameState(guess, feedback);
+    const words_list = sifter.filteredWords;
+    displayWords(words_list);
 }
 
 // Update the display of filtered words and the word count, based on the current list of words
@@ -84,14 +81,7 @@ function displayWords(words) {
     });
 }
 
-// Check guess and feedback input for validity. This should be made more strict
-// eventually, to check for only-letters for the guess, and for only b, y, or g
-// in the feedback.
-function validate(guess, feedback) {
-    return guess.length === 5 && feedback.length === 5;
-}
-
-// Reset the entire application. Clears the filters, reloads the word list, 
+// Reset the entire application. Clears the filters, reloads zthe word list, 
 // And initializes the display.
 function resetApp() {
     const guessInput = document.getElementById('guess');
