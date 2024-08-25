@@ -1,16 +1,6 @@
 # Node.js dependencies
 node_modules/
 
-# TypeScript output
-dist/
-build/
-*.js
-*.js.map
-
-# Ignore specific compiled output from TypeScript
-out/
-*.tsbuildinfo
-
 # Logs
 logs/
 *.log
@@ -26,9 +16,6 @@ coverage/
 .vscode/launch.json
 .vscode/*.code-workspace
 
-# Optional: JetBrains IDEs (like WebStorm) project files
-.idea/
-
 # OS-specific files
 .DS_Store
 Thumbs.db
@@ -37,15 +24,6 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
-
-# Ignore HTML and CSS preprocessor artifacts
-*.sass-cache
-*.scss-cache
-*.css.map
-
-# Ignore test coverage reports
-coverage/
-*.lcov
 
 # Ignore temporary files
 *.tmp

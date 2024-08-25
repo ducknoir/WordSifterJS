@@ -1,0 +1,18 @@
+{
+  "name": "wordsifterjs",
+  "version": "1.0.0",
+  "description": "Sift the words from a dictionary according to game play.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
