@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Fetch the word list from the JSON file
-fetch('words.json')
+fetch('dictionary.json')
     .then(response => {
         console.log('Fetch response status:', response.status);
         return response.json();
