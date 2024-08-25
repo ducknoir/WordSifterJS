@@ -2,7 +2,7 @@ class WordSifter {
     constructor(words) {
         this._all_words = words;
         this._blacks = new Set();
-        this._yellows = Array.from({ length: 5 }, () => new Set());
+        this._yellows = new Array(5).fill().map(() => new Set())
         this._greens = Array(5).fill(null);
         this._have_filter = false; 
     }
@@ -28,8 +28,10 @@ class WordSifter {
     get filteredWords() {
         let filtered = this._all_words
         if (this._have_filter) {
-            let greensRegexStr = `^${this._greens.map(letter => letter || '.').join('')}$`
-            let greensRegex = new RegExp(greensRegexStr);
+            // For each letter in the array this._greens, place that letter. For empty
+            // positions place '.' to match anything
+            let greensRegexParts = this._greens.map(letter => letter || '.').join('')
+            let greensRegex = new RegExp(`^${greensRegexParts}$`);
 
             // For each letter position, combine the blacks and yellows to make a full set
             // of letters to exclude for that position
@@ -94,7 +96,7 @@ function resetApp() {
     document.getElementById('updateButton').disabled = true;
 
     // Re-initialize the sifter to its original state, then update the diaplay
-    fetch('words.json')
+    fetch('dictionary.json')
         .then(response => response.json())
         .then(data => {
             // Reset the sifter state
@@ -149,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const guessValue = guessInput.value.trim();
         const feedbackValue = feedbackInput.value.trim();
 
-        // Simple validation example: check if both fields are non-empty
         updateButton.disabled = !validateInputs(guessValue, feedbackValue);
     }
 
