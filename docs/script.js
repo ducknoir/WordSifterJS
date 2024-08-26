@@ -1,5 +1,27 @@
 const sifter = new WordSifter();
 
+function updateGuessGrid(word_sifter) {
+    const grid = document.getElementById('guess-grid');
+    grid.innerHTML = ''; // Clear previous entries
+
+    guesses = word_sifter.guesses;
+    console.log("sifter.guesses: ", guesses);
+    feedbacks = word_sifter.feedbacks;
+    console.log("sifter.feedbacks: ", feedbacks);
+    guesses.forEach((guess, index) => {
+        guess.forEach((letter, i) => {
+            const square = document.createElement('div');
+            square.classList.add('grid-square');
+            square.textContent = letter;
+            // Assign color based on feedback
+            const color = feedbacks[index][i] === 'G' ? 'green' :
+                          feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
+            square.classList.add(color);
+            grid.appendChild(square);
+        });
+    });
+}
+
 // Called when user clicks "Update", or presses Enter, after entering guess and feedback
 // Reads the new guess and feedback from the DOM, updates the sifter state, gets the
 // updated filtered list, and pushes the updated list back to the display.
@@ -9,6 +31,8 @@ function handleUpdate (sifter) {
     const feedback = document.getElementById('feedback').value;
 
     sifter.updateGameState(guess, feedback);
+    updateGuessGrid(sifter); // Update the guess grid display
+
     const words_list = sifter.filteredWords;
     displayWords(words_list);
 }
@@ -19,7 +43,7 @@ function displayWords(words) {
     const wordCountHeading = document.getElementById('word-count');
 
     // Update the word count in the heading
-    wordCountHeading.textContent = `${words.length} Words:`;
+    wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
 
     filteredWordsList.innerHTML = '';
     words.forEach(word => {

@@ -5,10 +5,18 @@ class WordSifter {
         this._yellows = new Array(5).fill().map(() => new Set())
         this._greens = Array(5).fill(null);
         this._have_filter = false; 
+        this._guesses = [];
+        this._feedbacks = [];
     }
 
     updateGameState(guess, feedback) {
         if (guess && feedback) {
+            let guess_array = guess.trim().toUpperCase().split('');
+            this._guesses.push(guess_array);
+
+            let feedback_array = feedback.trim().toUpperCase().split('');
+            this._feedbacks.push(feedback_array);
+
             guess = guess.trim().toUpperCase();
             feedback = feedback.trim().toUpperCase();
             feedback.split('').forEach((color, i) => {
@@ -51,6 +59,14 @@ class WordSifter {
             filtered = filtered.filter(word => filters.every(f => f(word)));
         }
         return filtered
+    }
+
+    get guesses() {
+        return this._guesses;
+    }
+
+    get feedbacks() {
+        return this._feedbacks;
     }
 }
 

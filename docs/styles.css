@@ -56,10 +56,10 @@ button:hover {
 }
 
 button:disabled {
-    background-color: #cccccc; /* Light gray for disabled state */
-    color: #666666; /* Muted text color */
+    background-color: #cccccc;
+    color: #666666;
     cursor: default;
-    opacity: 0.6; /* Slightly transparent to indicate disabled */
+    opacity: 0.6;
 }
 
 /* Flexbox for buttons */
@@ -81,3 +81,31 @@ ul li {
     font-weight: bold;
     font-size: 1.1em;
 }
+
+#guess-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 40px);
+    row-gap: 2px;
+    column-gap: 4px;
+}
+
+.grid-square {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    font-family: arial, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: white
+}
+
+#button-container {
+    margin-bottom: 20px;
+}
+
+.green { background-color: #6aaa64; }
+.yellow { background-color: #c9b458; }
+.gray { background-color: #787c7e; }
