@@ -1,13 +1,13 @@
-const sifter = new WordSifter();
+// script.js
+
+let sifter;
 
 function updateGuessGrid(word_sifter) {
     const grid = document.getElementById('guess-grid');
     grid.innerHTML = ''; // Clear previous entries
 
     guesses = word_sifter.guesses;
-    console.log("sifter.guesses: ", guesses);
     feedbacks = word_sifter.feedbacks;
-    console.log("sifter.feedbacks: ", feedbacks);
     guesses.forEach((guess, index) => {
         guess.forEach((letter, i) => {
             const square = document.createElement('div');
@@ -30,7 +30,7 @@ function handleUpdate (sifter) {
     const guess = document.getElementById('guess').value;
     const feedback = document.getElementById('feedback').value;
 
-    sifter.updateGameState(guess, feedback);
+    sifter.update(guess, feedback);
     updateGuessGrid(sifter); // Update the guess grid display
 
     const words_list = sifter.filteredWords;
@@ -53,42 +53,36 @@ function displayWords(words) {
     });
 }
 
-// Reset the entire application. Clears the filters, reloads zthe word list, 
-// And initializes the display.
+function initializeApp(words) {
+    sifter = new WordSifter(words);
+    const filtered = sifter.filteredWords;
+    displayWords(filtered);
+    window.updateSifter = () => handleUpdate(sifter);
+}
+
 function resetApp() {
     const guessInput = document.getElementById('guess');
     const feedbackInput = document.getElementById('feedback');
+    const grid = document.getElementById('guess-grid').innerHTML = '';
 
-    // Clear input fields
     guessInput.value = '';
     feedbackInput.value = '';
-
     document.getElementById('updateButton').disabled = true;
 
-    // Re-initialize the sifter to its original state, then update the diaplay
-    fetch('dictionary.json')
-        .then(response => response.json())
-        .then(data => {
-            // Reset the sifter state
-            const sifter = new WordSifter(data.words);
-            // Update the display to the full word liet
-            displayWords(sifter.filteredWords);
-            // Re-attach the update handler
-            window.updateSifter = () => handleUpdate(sifter);
-        })
-        .catch(error => {
-        });
+    sifter.reset();  // Call the reset method on the sifter
+    displayWords(sifter.filteredWords);  // Re-display the full word list
 }
 
 function validateInputs(guess, feedback) {
-    guessArr = guess.trim().toUpperCase().split('')
-    feedbackArr = feedback.trim().toUpperCase().split('')
+    const guessArr = guess.trim().toUpperCase().split('')
+    const feedbackArr = feedback.trim().toUpperCase().split('')
 
     const ASCII_CODE_A = 65;
     const guessAllowed = Array.from({ length: 26 }, (_, i) => String.fromCharCode(ASCII_CODE_A + i));
-    let feedbackAllowed = ['B', 'Y', 'G']
+    guessAllowed.push('.'); // Wildcard
+    const feedbackAllowed = ['B', 'Y', 'G']
 
-    let valid = guess.length === 5
+    const valid = guess.length === 5
      && feedback.length === 5
      && guessArr.every(char => guessAllowed.includes(char))
      && feedbackArr.every(char => feedbackAllowed.includes(char));
@@ -128,13 +122,14 @@ document.addEventListener('DOMContentLoaded', function () {
     feedbackInput.addEventListener('input', validateInputsHandler);
 });
 
-// Fetch the word list from the JSON file
+// Fetch the word list and initialize the app
 fetch('dictionary.json')
     .then(response => {
-        console.log('Fetch response status:', response.status);
         return response.json();
     })
-    .then(resetApp)
+    .then(data => {
+        initializeApp(data.words);  // Initialize the sifter and UI
+    })
     .catch(error => {
         console.error('Error loading word list:', error);
     });

@@ -1,6 +1,6 @@
 // WordSifter.test.js
 
-const WordSifter = require('../docs/WordSifter').WordSifter;
+const WordSifter = require('../docs/WordSifter');
 
 describe('WordSifter', () => {
   test('should initialize with the correct word list', () => {
