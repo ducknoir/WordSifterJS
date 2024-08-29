@@ -44,7 +44,6 @@ describe('PrepareState', () => {
         expect(words.length).toEqual(14855);
 
         const sifter = new WordSifter(words);
-        console.log(`sifter.filteredWords.length: ${sifter.filterList.length}`);
 
         expect(sifter.filteredWords.length).toEqual(words.length);
   
