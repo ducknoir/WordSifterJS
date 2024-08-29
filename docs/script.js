@@ -4,12 +4,15 @@
 
     let sifter;
 
+    let guessInput, feedbackInput;
+    let updateButton, resetButton;
+    let guessGrid, filteredWords, wordCountHeading;
+
     // Called every time the user submits a new guess/feedback. Builds a row
     // of colored tiles showing the letters, and appends the row to 
     // the guess-grid on the di
     function updateGuessGrid(wordSifter) {
-        const grid = document.getElementById('guess-grid');
-        grid.innerHTML = ''; // Clear previous entries
+        guessGrid.innerHTML = ''; // Clear previous entries
 
         guesses = wordSifter.guesses;
         feedbacks = wordSifter.feedbacks;
@@ -22,7 +25,7 @@
                 const color = feedbacks[index][i] === 'G' ? 'green' :
                             feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
                 square.classList.add(color);
-                grid.appendChild(square);
+                guessGrid.appendChild(square);
             });
         });
     }
@@ -32,8 +35,8 @@
     // updated filtered list, and pushes the updated list back to the display.
     // Assumes input has already been validated.
     function handleUpdate (wordSifter) {
-        const guess = document.getElementById('guess').value;
-        const feedback = document.getElementById('feedback').value;
+        const guess = guessInput.value;
+        const feedback = feedbackInput.value;
 
         wordSifter.update(guess, feedback);
         updateGuessGrid(wordSifter); // Update the guess grid display
@@ -44,28 +47,24 @@
 
     // Update the display of filtered words and the word count, based on the current list of words
     function displayWords(words) {
-        const filteredWordsList = document.getElementById('filtered-words');
-        const wordCountHeading = document.getElementById('word-count');
 
         // Update the word count in the heading
         wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
 
-        filteredWordsList.innerHTML = '';
+        filteredWords.innerHTML = '';
         words.forEach(word => {
             const listItem = document.createElement('li');
             listItem.textContent = word;
-            filteredWordsList.appendChild(listItem);
+            filteredWords.appendChild(listItem);
         });
     }
 
     function resetApp(wordSifter) {
-        const guessInput = document.getElementById('guess');
-        const feedbackInput = document.getElementById('feedback');
-        const grid = document.getElementById('guess-grid').innerHTML = '';
+        guessGrid.innerHTML = '';
 
         guessInput.value = '';
         feedbackInput.value = '';
-        document.getElementById('updateButton').disabled = true;
+        updateButton.disabled = true;
 
         wordSifter.reset();  // Call the reset method on the sifter
         displayWords(wordSifter.filteredWords);  // Re-display the full word list
@@ -88,13 +87,14 @@
         return valid
     }
 
-    // We want handleUpdate to be called if the user presses Enter
-    // with keyboard focus on either of the input fields
     document.addEventListener('DOMContentLoaded', function () {
-        const guessInput = document.getElementById('guess');
-        const feedbackInput = document.getElementById('feedback');
-        const updateButton = document.getElementById('updateButton');
-        const resetButton = document.getElementById('resetButton');
+        guessInput = document.getElementById('guess-input');
+        feedbackInput = document.getElementById('feedback-input');
+        updateButton = document.getElementById('update-button');
+        resetButton = document.getElementById('reset-button');
+        guessGrid = document.getElementById('guess-grid');
+        filteredWords = document.getElementById('filtered-words');
+        wordCountHeading = document.getElementById('word-count');
 
         guessInput.addEventListener('keypress', function (event) {
             if (event.key === 'Enter') {
