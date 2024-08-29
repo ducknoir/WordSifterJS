@@ -54,8 +54,8 @@ class WordSifter {
         this._filtered_words = this._all_words;
         this._guesses = [];
         this._feedbacks = [];
-        this._blacks_set = new Set();
-        this._yellows_bag = new MultiSet();
+        this._blacks_set = null;
+        this._yellows_bag = null;
     }
 
     // Prepare the state that will be needed by the filter
@@ -67,7 +67,10 @@ class WordSifter {
     prepareState(guess, feedback) {
         if (!(guess && feedback)) 
             return;
-        
+
+        this._blacks_set = new Set();
+        this._yellows_bag = new MultiSet();
+
         const guess_array = guess.trim().toUpperCase().split('');
         this._guesses.push(guess_array);
 
