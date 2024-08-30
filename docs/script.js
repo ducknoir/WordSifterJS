@@ -1,145 +1,147 @@
-// script.js
+// import WordSifter from './WordSifter.js';
+import WordSifter from './WordSifter.js';
 
-(function() {
+const App = (function() {
+    'use strict';
 
     let sifter;
 
-    let guessInput, feedbackInput;
-    let updateButton, resetButton;
-    let guessGrid, filteredWords, wordCountHeading;
+    const elements = {
+        guessInput: null,
+        feedbackInput: null,
+        updateButton: null,
+        resetButton: null,
+        guessGrid: null,
+        filteredWords: null,
+        wordCountHeading: null
+    };
 
-    // Called every time the user submits a new guess/feedback. Builds a row
-    // of colored tiles showing the letters, and appends the row to 
-    // the guess-grid on the di
     function updateGuessGrid(wordSifter) {
-        guessGrid.innerHTML = ''; // Clear previous entries
+        elements.guessGrid.innerHTML = ''; // Clear previous entries
 
-        guesses = wordSifter.guesses;
-        feedbacks = wordSifter.feedbacks;
+        const {guesses, feedbacks} = wordSifter;
         guesses.forEach((guess, index) => {
             guess.forEach((letter, i) => {
                 const square = document.createElement('div');
                 square.classList.add('grid-square');
                 square.textContent = letter;
-                // Assign color based on feedback
                 const color = feedbacks[index][i] === 'G' ? 'green' :
-                            feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
+                              feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
                 square.classList.add(color);
-                guessGrid.appendChild(square);
+                elements.guessGrid.appendChild(square);
             });
         });
     }
 
-    // Called when user clicks "Update", or presses Enter, after entering guess and feedback
-    // Reads the new guess and feedback from the DOM, updates the sifter state, gets the
-    // updated filtered list, and pushes the updated list back to the display.
-    // Assumes input has already been validated.
-    function handleUpdate (wordSifter) {
-        const guess = guessInput.value;
-        const feedback = feedbackInput.value;
+    function handleUpdate(wordSifter) {
+        const guess = elements.guessInput.value;
+        const feedback = elements.feedbackInput.value;
 
         wordSifter.update(guess, feedback);
-        updateGuessGrid(wordSifter); // Update the guess grid display
+        updateGuessGrid(wordSifter);
 
-        const words_list = wordSifter.filteredWords;
-        displayWords(words_list);
+        displayWords(wordSifter.filteredWords);
     }
 
-    // Update the display of filtered words and the word count, based on the current list of words
     function displayWords(words) {
+        elements.wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
 
-        // Update the word count in the heading
-        wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
-
-        filteredWords.innerHTML = '';
+        elements.filteredWords.innerHTML = '';
         words.forEach(word => {
             const listItem = document.createElement('li');
             listItem.textContent = word;
-            filteredWords.appendChild(listItem);
+            elements.filteredWords.appendChild(listItem);
         });
     }
 
     function resetApp(wordSifter) {
-        guessGrid.innerHTML = '';
+        elements.guessGrid.innerHTML = '';
+        elements.guessInput.value = '';
+        elements.feedbackInput.value = '';
+        elements.updateButton.disabled = true;
 
-        guessInput.value = '';
-        feedbackInput.value = '';
-        updateButton.disabled = true;
-
-        wordSifter.reset();  // Call the reset method on the sifter
-        displayWords(wordSifter.filteredWords);  // Re-display the full word list
+        wordSifter.reset();
+        displayWords(wordSifter.filteredWords);
     }
 
     function validateInputs(guess, feedback) {
-        const guessArr = guess.trim().toUpperCase().split('')
-        const feedbackArr = feedback.trim().toUpperCase().split('')
+        const guessArr = guess.trim().toUpperCase().split('');
+        const feedbackArr = feedback.trim().toUpperCase().split('');
 
         const ASCII_CODE_A = 65;
         const guessAllowed = Array.from({ length: 26 }, (_, i) => String.fromCharCode(ASCII_CODE_A + i));
         guessAllowed.push('.'); // Wildcard
-        const feedbackAllowed = ['B', 'Y', 'G']
+        const feedbackAllowed = ['B', 'Y', 'G'];
 
-        const valid = guess.length === 5
-        && feedback.length === 5
-        && guessArr.every(char => guessAllowed.includes(char))
-        && feedbackArr.every(char => feedbackAllowed.includes(char));
-
-        return valid
+        return guess.length === 5
+            && feedback.length === 5
+            && guessArr.every(char => guessAllowed.includes(char))
+            && feedbackArr.every(char => feedbackAllowed.includes(char));
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        guessInput = document.getElementById('guess-input');
-        feedbackInput = document.getElementById('feedback-input');
-        updateButton = document.getElementById('update-button');
-        resetButton = document.getElementById('reset-button');
-        guessGrid = document.getElementById('guess-grid');
-        filteredWords = document.getElementById('filtered-words');
-        wordCountHeading = document.getElementById('word-count');
-
-        guessInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                handleUpdate(sifter);
-            }
+    function setupEventListeners() {
+        elements.guessInput.addEventListener('keypress', event => {
+            if (event.key === 'Enter') handleUpdate(sifter);
         });
-        guessInput.addEventListener('focus', function() {this.select();});
+        elements.guessInput.addEventListener('focus', function() { this.select(); });
 
-        feedbackInput.addEventListener('keypress', function (event) {
-            if (event.key === 'Enter') {
-                handleUpdate(sifter);
-            }
+        elements.feedbackInput.addEventListener('keypress', event => {
+            if (event.key === 'Enter') handleUpdate(sifter);
         });
-        feedbackInput.addEventListener('focus', function() {this.select();});
+        elements.feedbackInput.addEventListener('focus', function() { this.select(); });
 
         function validateInputsHandler() {
-            const guessValue = guessInput.value.trim();
-            const feedbackValue = feedbackInput.value.trim();
+            const guessValue = elements.guessInput.value.trim();
+            const feedbackValue = elements.feedbackInput.value.trim();
 
-            updateButton.disabled = !validateInputs(guessValue, feedbackValue);
+            elements.updateButton.disabled = !validateInputs(guessValue, feedbackValue);
         }
 
-        guessInput.addEventListener('input', validateInputsHandler);
-        feedbackInput.addEventListener('input', validateInputsHandler);
+        elements.guessInput.addEventListener('input', validateInputsHandler);
+        elements.feedbackInput.addEventListener('input', validateInputsHandler);
 
-        updateButton.addEventListener('click', () => handleUpdate(sifter));
-        resetButton.addEventListener('click', () => resetApp(sifter));
-
-    });
-
-    function initializeApp(words) {
-        sifter = new WordSifter(words);
-        const filtered = sifter.filteredWords;
-        displayWords(filtered);
+        elements.updateButton.addEventListener('click', () => handleUpdate(sifter));
+        elements.resetButton.addEventListener('click', () => resetApp(sifter));
     }
 
-    // Fetch the word list and initialize the app
-    fetch('dictionary.json')
-        .then(response => {
-            return response.json();
-        })
-        .then(data => { 
-            initializeApp(data.words);  // Initialize the sifter and UI
-        })
-        .catch(error => {
-            console.error('Error loading word list:', error);
-        });
+    function initializeElements() {
+        const elementIds = {
+            guessInput: 'guess-input',
+            feedbackInput: 'feedback-input',
+            updateButton: 'update-button',
+            resetButton: 'reset-button',
+            guessGrid: 'guess-grid',
+            filteredWords: 'filtered-words',
+            wordCountHeading: 'word-count'
+        };
+
+        for (const [key, id] of Object.entries(elementIds)) {
+            elements[key] = document.getElementById(id);
+            if (!elements[key]) {
+                console.error(`Element with id "${id}" not found. Check your HTML.`);
+            }
+        }
+    }
+
+    async function initializeApp() {
+        try {
+            initializeElements();
+            const response = await fetch('dictionary.json');
+            const data = await response.json();
+            sifter = new WordSifter(data.words);
+            displayWords(sifter.filteredWords);
+            setupEventListeners();
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            // Consider adding user-friendly error handling here
+        }
+    }
+
+    function init() {
+        initializeApp();
+    }
+
+    return { init };
 })();
+
+document.addEventListener('DOMContentLoaded', App.init);

@@ -165,12 +165,13 @@ class WordSifter {
     }
 }
 
-// This will attach WordSifter to the window object in the browser
-if (typeof window !== 'undefined') {
-    window.WordSifter = WordSifter;
-}
+// // This will attach WordSifter to the window object in the browser
+// if (typeof window !== 'undefined') {
+//     window.WordSifter = WordSifter;
+// }
 
-// This will only be executed in Node.js environments (e.g., for Jest tests)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = WordSifter;
-}
+// // This will only be executed in Node.js environments (e.g., for Jest tests)
+// if (typeof module !== 'undefined' && module.exports) {
+//     module.exports = WordSifter;
+// }
+export default WordSifter;

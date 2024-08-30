@@ -2,10 +2,12 @@
   "name": "wordsifterjs",
   "version": "1.0.0",
   "description": "Sift the words from a dictionary according to game play.",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
+
   "scripts": {
     "test": "jest"
   },
