@@ -40,6 +40,7 @@ const App = (function() {
         updateGuessGrid(wordSifter);
 
         displayWords(wordSifter.filteredWords);
+        elements.guessInput.focus();
     }
 
     function displayWords(words) {
