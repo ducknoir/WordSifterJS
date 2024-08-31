@@ -1,4 +1,3 @@
-// import WordSifter from './WordSifter.js';
 import WordSifter from './WordSifter.js';
 
 const App = (function() {
@@ -102,6 +101,10 @@ const App = (function() {
 
         elements.updateButton.addEventListener('click', () => handleUpdate(sifter));
         elements.resetButton.addEventListener('click', () => resetApp(sifter));
+
+        window.addEventListener('focus', function() {
+            elements.guessInput.focus();
+        });
     }
 
     function initializeElements() {
@@ -133,7 +136,6 @@ const App = (function() {
             setupEventListeners();
         } catch (error) {
             console.error('Error during initialization:', error);
-            // Consider adding user-friendly error handling here
         }
     }
 
