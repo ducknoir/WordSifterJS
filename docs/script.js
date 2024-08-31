@@ -1,3 +1,5 @@
+// script.js
+
 import WordSifter from './WordSifter.js';
 
 const App = (function() {
@@ -43,6 +45,11 @@ const App = (function() {
         elements.guessInput.focus();
     }
 
+    function handleExcludeUsed(wordSifter) {
+        wordSifter.excludeUsedWords = elements.excludeUsedCheckbox.checked;
+        displayWords(wordSifter.filteredWords);
+    }
+
     function displayWords(words) {
         elements.wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
 
@@ -70,7 +77,6 @@ const App = (function() {
 
         const ASCII_CODE_A = 65;
         const guessAllowed = Array.from({ length: 26 }, (_, i) => String.fromCharCode(ASCII_CODE_A + i));
-        guessAllowed.push('.'); // Wildcard
         const feedbackAllowed = ['B', 'Y', 'G'];
 
         return guess.length === 5
@@ -102,6 +108,7 @@ const App = (function() {
 
         elements.updateButton.addEventListener('click', () => handleUpdate(sifter));
         elements.resetButton.addEventListener('click', () => resetApp(sifter));
+        elements.excludeUsedCheckbox.addEventListener('change', () => handleExcludeUsed(sifter));
 
         window.addEventListener('focus', function() {
             elements.guessInput.focus();
@@ -114,6 +121,7 @@ const App = (function() {
             feedbackInput: 'feedback-input',
             updateButton: 'update-button',
             resetButton: 'reset-button',
+            excludeUsedCheckbox: 'exclude-used',
             guessGrid: 'guess-grid',
             filteredWords: 'filtered-words',
             wordCountHeading: 'word-count'
@@ -130,9 +138,17 @@ const App = (function() {
     async function initializeApp() {
         try {
             initializeElements();
-            const response = await fetch('dictionary.json');
-            const data = await response.json();
-            sifter = new WordSifter(data.words);
+
+            // Fetch and load the dictionary JSON file
+            const dictionaryResponse = await fetch('dictionary.json');
+            const dictionaryData = await dictionaryResponse.json();
+
+            // Fetch and load the used words JSON file
+            const usedWordsResponse = await fetch('used_words.json');
+            const usedWordsData = await usedWordsResponse.json();
+
+            sifter = new WordSifter(dictionaryData.words, usedWordsData.words);
+
             displayWords(sifter.filteredWords);
             setupEventListeners();
         } catch (error) {

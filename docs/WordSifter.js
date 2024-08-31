@@ -42,16 +42,21 @@ class MultiSet {
 
 
 class WordSifter {
-    constructor(words) {
+    constructor(words, usedWords) {
         if (!Array.isArray(words)) {
-            throw new TypeError("WordSifter constructor argument must be an array.");
+            throw new TypeError("WordSifter constructor argument 'words' must be an array.");
         }
-        this._all_words = words;
+        if (!Array.isArray(usedWords)) {
+            throw new TypeError("WordSifter constructor argument 'usedWords' must be an array.");
+        }
+        this._allWords = words;
+        this._usedWords = usedWords;
+        this._showOnlyUnused = false;
         this.reset();
     }
-
+    
     reset() {
-        this._filtered_words = this._all_words;
+        this._filteredWords = this._allWords;
         this._guesses = [];
         this._feedbacks = [];
         this._blacks_set = null;
@@ -135,16 +140,16 @@ class WordSifter {
     }
 
     // Needs:
-    // this._filtered_words
+    // this._filteredWords
     // this._yellows_bag (prepared by updateState, cloned for each word)
     // this._blacks_set (prepared by updateState)
     // most recent guess, as this._guesses[this._guesses.length - 1]
     // most recent feedback, as this._feedbacks[this._feedbacks.length - 1]
     filterList() {
         // Go through the current word list
-        const filtered = this._filtered_words.filter(word => this.isKeep(word));
+        const filtered = this._filteredWords.filter(word => this.isKeep(word));
 
-        this._filtered_words = filtered;
+        this._filteredWords = filtered;
     }
 
     update(guess, feedback) {
@@ -153,8 +158,11 @@ class WordSifter {
     }
 
     get filteredWords() {
-        return this._filtered_words;
-    }    
+        let filtered = this._filteredWords;
+        if (this._showOnlyUnused)
+            filtered = filtered.filter(word => !this._usedWords.includes(word));
+        return filtered;
+    }
 
     get guesses() {
         return this._guesses;
@@ -163,15 +171,10 @@ class WordSifter {
     get feedbacks() {
         return this._feedbacks;
     }
+
+    set excludeUsedWords(value) {
+        this._showOnlyUnused = value;
+    }
 }
 
-// // This will attach WordSifter to the window object in the browser
-// if (typeof window !== 'undefined') {
-//     window.WordSifter = WordSifter;
-// }
-
-// // This will only be executed in Node.js environments (e.g., for Jest tests)
-// if (typeof module !== 'undefined' && module.exports) {
-//     module.exports = WordSifter;
-// }
 export default WordSifter;
