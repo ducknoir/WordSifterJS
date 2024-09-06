@@ -83,10 +83,14 @@ ul li {
 }
 
 #guess-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 40px);
-    row-gap: 2px;
-    column-gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.guess-row {
+    display: flex;
+    gap: 2px;
 }
 
 .grid-square {

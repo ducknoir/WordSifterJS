@@ -22,6 +22,8 @@ const App = (function() {
 
         const {guesses, feedbacks} = wordSifter;
         guesses.forEach((guess, index) => {
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('guess-row');
             guess.forEach((letter, i) => {
                 const square = document.createElement('div');
                 square.classList.add('grid-square');
@@ -29,8 +31,9 @@ const App = (function() {
                 const color = feedbacks[index][i] === 'G' ? 'green' :
                               feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
                 square.classList.add(color);
-                elements.guessGrid.appendChild(square);
+                rowDiv.appendChild(square);
             });
+            elements.guessGrid.appendChild(rowDiv);
         });
     }
 
