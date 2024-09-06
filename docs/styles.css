@@ -68,14 +68,15 @@ button:disabled {
     gap: 10px; /* Space between the buttons */
     margin-top: 20px; /* Space above the buttons */
 }
-ul {
+
+#filtered-words {
     list-style-type: none;
     padding-left: 0;
     column-width: 50px;
     column-gap: 10px;
 }
 
-ul li {
+#filtered-words li {
     border-width: 1;
     font-family: monospace;
     font-weight: bold;
@@ -113,3 +114,18 @@ ul li {
 .green { background-color: #6aaa64; }
 .yellow { background-color: #c9b458; }
 .gray { background-color: #787c7e; }
+
+#instructions-container {
+    font-family: 'Georgia', serif;
+    line-height: 1.8;
+}
+
+#instructions-container h2 {
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+}
+
+#instructions-container b {
+    font-family: "Arial", sans-serif;
+    font-weight: bold;
+}

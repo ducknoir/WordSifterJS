@@ -28,9 +28,30 @@
         <!-- Grid squares will be populated dynamically -->
     </div>
 
-    <h2 id="word-count">Words:</h2>
-    <ul id="filtered-words">
-        <!-- Filtered words will appear here -->
-    </ul>
+    <div id="instructions-container">
+        <h2>How to Use Word Sifter</h2>
+        <ol>
+            <li><strong>Enter your guess:</strong> Type your 5-letter word guess into the "Guess" field.</li>
+            <li><strong>Feedback:</strong> In the "Feedback" field, enter the color results from the game:
+                <ul>
+                    <li>Use <b>G</b> for green (correct letter, correct position)</li>
+                    <li>Use <b>Y</b> for yellow (correct letter, wrong position)</li>
+                    <li>Use <b>B</b> for black or gray (letter not in the word)</li>
+                </ul>
+                <p>For example, if your guess was <b>STEAM</b> and the result was green, yellow, black, black, yellow, you would enter <b>GYBBY</b>.</p>
+            </li>
+            <li><strong>Update:</strong> Click "Update" or press Enter to see the filtered list of possible words based on your guess and feedback.</li>
+            <li><strong>Exclude used words:</strong> Select "Exclude used" to hide words that have been solutions in past games.</li>
+            <li><strong>Reset:</strong> Click "Reset" to clear your inputs and start over with the full word list.</li>
+        </ol>
+        <p>Continue entering guesses and feedback to narrow down the possible words. Good luck!</p>
+    </div>
+
+    <div id="word-list-container" style="display: none;">
+        <h2 id="word-count">Words:</h2>
+        <ul id="filtered-words">
+            <!-- Filtered words will appear here -->
+        </ul>
+    </div>
 </body>
 </html>

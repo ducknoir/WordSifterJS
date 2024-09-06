@@ -54,11 +54,14 @@ const App = (function() {
     }
 
     function displayWords(words) {
+        elements.wordListContainer.style.display = 'block';
+        elements.instructionsContainer.style.display = 'none';
         elements.wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
-
+    
         elements.filteredWords.innerHTML = '';
         words.forEach(word => {
             const listItem = document.createElement('li');
+            listItem.classList.add('list-word');
             listItem.textContent = word;
             elements.filteredWords.appendChild(listItem);
         });
@@ -70,8 +73,10 @@ const App = (function() {
         elements.feedbackInput.value = '';
         elements.updateButton.disabled = true;
 
+        elements.wordListContainer.style.display = 'none';
+        elements.instructionsContainer.style.display = 'block';
+    
         wordSifter.reset();
-        displayWords(wordSifter.filteredWords);
     }
 
     function validateInputs(guess, feedback) {
@@ -127,7 +132,9 @@ const App = (function() {
             excludeUsedCheckbox: 'exclude-used',
             guessGrid: 'guess-grid',
             filteredWords: 'filtered-words',
-            wordCountHeading: 'word-count'
+            wordCountHeading: 'word-count',
+            wordListContainer: 'word-list-container',
+            instructionsContainer: 'instructions-container'
         };
 
         for (const [key, id] of Object.entries(elementIds)) {
@@ -152,7 +159,6 @@ const App = (function() {
 
             sifter = new WordSifter(dictionaryData.words, usedWordsData.words);
 
-            displayWords(sifter.filteredWords);
             setupEventListeners();
         } catch (error) {
             console.error('Error during initialization:', error);
