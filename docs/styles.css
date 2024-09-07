@@ -86,12 +86,12 @@ button:disabled {
 #guess-grid {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
 .guess-row {
     display: flex;
-    gap: 2px;
+    gap: 3px;
 }
 
 .grid-square {
