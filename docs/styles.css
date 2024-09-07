@@ -69,20 +69,11 @@ button:disabled {
     margin-top: 20px; /* Space above the buttons */
 }
 
-#filtered-words {
-    list-style-type: none;
-    padding-left: 0;
-    column-width: 50px;
-    column-gap: 10px;
+#button-container {
+    margin-bottom: 20px;
 }
 
-#filtered-words li {
-    border-width: 1;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
+/* Guesses grid styling */
 #guess-grid {
     display: flex;
     flex-direction: column;
@@ -106,14 +97,12 @@ button:disabled {
     color: white
 }
 
-#button-container {
-    margin-bottom: 20px;
-}
-
+/* Tile colors */
 .green { background-color: #6aaa64; }
 .yellow { background-color: #c9b458; }
 .gray { background-color: #787c7e; }
 
+/* Instructions styling */
 #instructions-container {
     font-family: 'Georgia', serif;
     line-height: 1.8;
@@ -127,4 +116,19 @@ button:disabled {
 #instructions-container b {
     font-family: "Arial", sans-serif;
     font-weight: bold;
+}
+
+/* Filtered words styling */
+#filtered-words {
+    list-style-type: none;
+    padding-left: 0;
+    column-width: 50px;
+    column-gap: 10px;
+}
+
+#filtered-words li {
+    border-width: 1;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.1em;
 }
