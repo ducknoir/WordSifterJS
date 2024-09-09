@@ -2,7 +2,7 @@ name: Update Word List
 
 on:
   schedule:
-    - cron: '37 10 * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
+    - cron: '14 * * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
