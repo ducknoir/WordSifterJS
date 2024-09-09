@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Sifter</title>
+    <link rel="icon" type="image/ico" href="sifter-icon-256.ico">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Word Sifter</h1>
+        <div v-if="sifter.guesses">
+            <div>
+                <input type="text" v-model="guessInput" maxlength="5" @keypress.enter="handleUpdate" @focus="$event.target.select()">
+                <label for="guess-input">Guess</label>
+            </div>
+            <div>
+                <input type="text" v-model="feedbackInput" maxlength="5" @keypress.enter="handleUpdate" @focus="$event.target.select()">
+                <label for="feedback-input">Feedback (e.g. BYBBG, YGBBY)</label>
+            </div>
+            <div id="button-container">
+                <button @click="handleUpdate" :disabled="!isInputValid">Update</button>
+                <button @click="resetApp">Reset</button>
+                <label><input type="checkbox" v-model="excludeUsed" @change="handleExcludeUsed">Exclude used</label>
+            </div>
+
+            <div id="guess-grid">
+                <div v-for="(guess, guessIndex) in sifter.guesses" :key="guessIndex" class="guess-row">
+                    <div v-for="(letter, letterIndex) in guess" :key="`${guessIndex}-${letterIndex}`" 
+                         class="grid-square" 
+                         :class="getSquareColor(guessIndex, letterIndex)">
+                        {{ letter }}
+                    </div>
+                </div>
+            </div>
+            <h2 id="word-count">{{ wordCountText }}</h2>
+            <ul id="filtered-words">
+                <li v-for="word in sifter.filteredWords" :key="word">{{ word }}</li>
+            </ul>
+        </div>
+        <div v-else>Loading...</div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
