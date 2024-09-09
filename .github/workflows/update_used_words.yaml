@@ -2,7 +2,10 @@ name: Update Word List
 
 on:
   schedule:
-    - cron: '7 12 * * *'  # Runs at 12:07 UTC every day, 5:07 AM PDT. Observed update is between 4:00 AM and 4:20 AM PDT.
+    # The latest time when there's still an inhabited place (UTC-10) that hasn't rolled over to the next day is at 09:59 UTC.
+    # The latest time when there's still an uninhabited place (UTC-12) that hasn't rolled over to the next day is at 11:59 UTC.
+    # Observed update of source is between 4:00 AM and 4:20 AM PDT, 11:00 and 11:20 UTC.
+    - cron: '7 12 * * *'  # Runs at 12:07 UTC every day, 5:07 AM PDT.
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
