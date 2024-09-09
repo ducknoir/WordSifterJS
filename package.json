@@ -20,5 +20,8 @@
     "node-fetch": "^2.7.0",
     "@octokit/rest": "^21.0.2",
     "cheerio": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
