@@ -2,7 +2,7 @@
 
 import WordSifter from './WordSifter.js';
 
-const App = (function() {
+const App = (function () {
     'use strict';
 
     let sifter;
@@ -14,13 +14,13 @@ const App = (function() {
         resetButton: null,
         guessGrid: null,
         filteredWords: null,
-        wordCountHeading: null
+        wordCountHeading: null,
     };
 
     function updateGuessGrid(wordSifter) {
         elements.guessGrid.innerHTML = ''; // Clear previous entries
 
-        const {guesses, feedbacks} = wordSifter;
+        const { guesses, feedbacks } = wordSifter;
         guesses.forEach((guess, index) => {
             const rowDiv = document.createElement('div');
             rowDiv.classList.add('guess-row');
@@ -28,8 +28,12 @@ const App = (function() {
                 const square = document.createElement('div');
                 square.classList.add('grid-square');
                 square.textContent = letter;
-                const color = feedbacks[index][i] === 'G' ? 'green' :
-                              feedbacks[index][i] === 'Y' ? 'yellow' : 'gray';
+                const color =
+                    feedbacks[index][i] === 'G'
+                        ? 'green'
+                        : feedbacks[index][i] === 'Y'
+                        ? 'yellow'
+                        : 'gray';
                 square.classList.add(color);
                 rowDiv.appendChild(square);
             });
@@ -56,10 +60,12 @@ const App = (function() {
     function displayWords(words) {
         elements.wordListContainer.style.display = 'block';
         elements.instructionsContainer.style.display = 'none';
-        elements.wordCountHeading.textContent = `${words.length} Word${words.length != 1 ? "s" : ""}:`;
-    
+        elements.wordCountHeading.textContent = `${words.length} Word${
+            words.length != 1 ? 's' : ''
+        }:`;
+
         elements.filteredWords.innerHTML = '';
-        words.forEach(word => {
+        words.forEach((word) => {
             const listItem = document.createElement('li');
             listItem.classList.add('list-word');
             listItem.textContent = word;
@@ -75,7 +81,7 @@ const App = (function() {
 
         elements.wordListContainer.style.display = 'none';
         elements.instructionsContainer.style.display = 'block';
-    
+
         wordSifter.reset();
     }
 
@@ -84,41 +90,56 @@ const App = (function() {
         const feedbackArr = feedback.trim().toUpperCase().split('');
 
         const ASCII_CODE_A = 65;
-        const guessAllowed = Array.from({ length: 26 }, (_, i) => String.fromCharCode(ASCII_CODE_A + i));
+        const guessAllowed = Array.from({ length: 26 }, (_, i) =>
+            String.fromCharCode(ASCII_CODE_A + i)
+        );
         const feedbackAllowed = ['B', 'Y', 'G'];
 
-        return guess.length === 5
-            && feedback.length === 5
-            && guessArr.every(char => guessAllowed.includes(char))
-            && feedbackArr.every(char => feedbackAllowed.includes(char));
+        return (
+            guess.length === 5 &&
+            feedback.length === 5 &&
+            guessArr.every((char) => guessAllowed.includes(char)) &&
+            feedbackArr.every((char) => feedbackAllowed.includes(char))
+        );
     }
 
     function setupEventListeners() {
-        elements.guessInput.addEventListener('keypress', event => {
+        elements.guessInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') handleUpdate(sifter);
         });
-        elements.guessInput.addEventListener('focus', function() { this.select(); });
+        elements.guessInput.addEventListener('focus', function () {
+            this.select();
+        });
 
-        elements.feedbackInput.addEventListener('keypress', event => {
+        elements.feedbackInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') handleUpdate(sifter);
         });
-        elements.feedbackInput.addEventListener('focus', function() { this.select(); });
+        elements.feedbackInput.addEventListener('focus', function () {
+            this.select();
+        });
 
         function validateInputsHandler() {
             const guessValue = elements.guessInput.value.trim();
             const feedbackValue = elements.feedbackInput.value.trim();
 
-            elements.updateButton.disabled = !validateInputs(guessValue, feedbackValue);
+            elements.updateButton.disabled = !validateInputs(
+                guessValue,
+                feedbackValue
+            );
         }
 
         elements.guessInput.addEventListener('input', validateInputsHandler);
         elements.feedbackInput.addEventListener('input', validateInputsHandler);
 
-        elements.updateButton.addEventListener('click', () => handleUpdate(sifter));
+        elements.updateButton.addEventListener('click', () =>
+            handleUpdate(sifter)
+        );
         elements.resetButton.addEventListener('click', () => resetApp(sifter));
-        elements.excludeUsedCheckbox.addEventListener('change', () => handleExcludeUsed(sifter));
+        elements.excludeUsedCheckbox.addEventListener('change', () =>
+            handleExcludeUsed(sifter)
+        );
 
-        window.addEventListener('focus', function() {
+        window.addEventListener('focus', function () {
             elements.guessInput.focus();
         });
     }
@@ -134,13 +155,15 @@ const App = (function() {
             filteredWords: 'filtered-words',
             wordCountHeading: 'word-count',
             wordListContainer: 'word-list-container',
-            instructionsContainer: 'instructions-container'
+            instructionsContainer: 'instructions-container',
         };
 
         for (const [key, id] of Object.entries(elementIds)) {
             elements[key] = document.getElementById(id);
             if (!elements[key]) {
-                console.error(`Element with id "${id}" not found. Check your HTML.`);
+                console.error(
+                    `Element with id "${id}" not found. Check your HTML.`
+                );
             }
         }
     }
@@ -148,11 +171,11 @@ const App = (function() {
     async function initializeApp() {
         try {
             initializeElements();
-    
+
             // Fetch and load the dictionary JSON file
             const dictionaryResponse = await fetch('dictionary.json');
             const dictionaryData = await dictionaryResponse.json();
-    
+
             // Fetch used words from GitHub Gist
             const gistId = '2e18b28da88f9509e2b712805b541e1d';
             const gistUrl = `https://api.github.com/gists/${gistId}`;
@@ -160,10 +183,10 @@ const App = (function() {
             const gistData = await gistResponse.json();
             const usedWordsContent = gistData.files['used_words.json'].content;
             const usedWordsData = JSON.parse(usedWordsContent);
-            const usedWords = usedWordsData.map(item => item.w);
+            const usedWords = usedWordsData.map((item) => item.w);
             console.log(usedWords);
             sifter = new WordSifter(dictionaryData.words, usedWords);
-    
+
             setupEventListeners();
         } catch (error) {
             console.error('Error during initialization:', error);

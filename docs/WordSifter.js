@@ -40,21 +40,24 @@ class MultiSet {
     }
 }
 
-
 class WordSifter {
     constructor(words, usedWords) {
         if (!Array.isArray(words)) {
-            throw new TypeError("WordSifter constructor argument 'words' must be an array.");
+            throw new TypeError(
+                "WordSifter constructor argument 'words' must be an array."
+            );
         }
         if (!Array.isArray(usedWords)) {
-            throw new TypeError("WordSifter constructor argument 'usedWords' must be an array.");
+            throw new TypeError(
+                "WordSifter constructor argument 'usedWords' must be an array."
+            );
         }
         this._allWords = words;
         this._usedWords = usedWords;
         this._showOnlyUnused = false;
         this.reset();
     }
-    
+
     reset() {
         this._filteredWords = this._allWords;
         this._guesses = [];
@@ -70,8 +73,7 @@ class WordSifter {
     //    this._yellows_bag gets set for new guess
     //
     prepareState(guess, feedback) {
-        if (!(guess && feedback)) 
-            return;
+        if (!(guess && feedback)) return;
 
         this._blacks_set = new Set();
         this._yellows_bag = new MultiSet();
@@ -94,7 +96,7 @@ class WordSifter {
             } else if (color === 'Y') {
                 this._yellows_bag.add(letter);
             }
-        };
+        }
     }
 
     isKeep(
@@ -107,7 +109,7 @@ class WordSifter {
 
         let keep = true;
 
-        // for each letter in word . . . 
+        // for each letter in word . . .
         for (let i = 0; i < word_array.length; i++) {
             const w = word_array[i];
             const c = feedback_array[i];
@@ -115,18 +117,21 @@ class WordSifter {
 
             if (c === 'G') {
                 if (w != g) {
-                    keep = false; break;
+                    keep = false;
+                    break;
                 } else {
                     continue;
                 }
             } else if (c === 'Y' && w === g) {
-                keep = false; break;
+                keep = false;
+                break;
             } else if (this._blacks_set.has(w)) {
-                keep = false; break;
+                keep = false;
+                break;
             }
 
-            // We've covered every other reason to exclude the word based on this position; 
-            // now, if the letter matches a letter left in the yellows bag, pull one of 
+            // We've covered every other reason to exclude the word based on this position;
+            // now, if the letter matches a letter left in the yellows bag, pull one of
             // those letters. Until the bag is empty, we can't keep the word.
             if (keep && yellows_bag.has(w)) {
                 yellows_bag.remove(w);
@@ -147,7 +152,9 @@ class WordSifter {
     // most recent feedback, as this._feedbacks[this._feedbacks.length - 1]
     filterList() {
         // Go through the current word list
-        const filtered = this._filteredWords.filter(word => this.isKeep(word));
+        const filtered = this._filteredWords.filter((word) =>
+            this.isKeep(word)
+        );
 
         this._filteredWords = filtered;
     }
@@ -160,7 +167,9 @@ class WordSifter {
     get filteredWords() {
         let filtered = this._filteredWords;
         if (this._showOnlyUnused)
-            filtered = filtered.filter(word => !this._usedWords.includes(word));
+            filtered = filtered.filter(
+                (word) => !this._usedWords.includes(word)
+            );
         return filtered;
     }
 
