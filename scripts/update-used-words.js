@@ -60,7 +60,7 @@ async function main() {
     }
 
     console.log(`Scraping website from ${usedWordsUrl}...`);
-    const html = await scrapeWebsite();
+    const html = await scrapeWebsite(usedWordsUrl);
     console.log("Website scraped successfully. Parsing HTML...");
     const wordsList = parseHtml(html);
     console.log("HTML parsed successfully, got ${wordsList.length} words");
@@ -90,4 +90,7 @@ async function main() {
   }
 }
 
-main();
+main().catch(error => {
+  console.error("Error in execution:", error);
+  process.exit(1);
+});
