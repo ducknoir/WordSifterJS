@@ -2,7 +2,7 @@ name: Update Word List
 
 on:
   schedule:
-    - cron: '*/12 * * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
+    - cron: '7 12 * * *'  # Runs at 12:07 UTC every day, 5:07 AM PDT. Observed update is between 4:00 AM and 4:20 AM PDT.
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
         node-version: '20'
         
     - name: Install dependencies
-      run: npm ci  # or yarn install
+      run: npm ci
       
     - name: Run scraper and update Gist
       env:
