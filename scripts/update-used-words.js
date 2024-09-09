@@ -44,16 +44,15 @@ async function updateGist(octokit, gistId, filename, jsonContent) {
                 }
             }
         });
-  
-        console.log("Gist updated successfully");
+
         return response.data;
     } catch (error) {
         console.error("Error updating gist:", error);
+        throw error;
     }
 }
 
 async function main() {
-  try {
     const usedWordsUrl = process.env.USED_WORDS_SOURCE_URL;
     if (!usedWordsUrl) {
       throw new Error("USED_WORDS_SOURCE_URL is not set");
@@ -85,9 +84,6 @@ async function main() {
     await updateGist(octokit, gistId, gistFilename, JSON.stringify(wordsList, null, 2));
 
     console.log("Gist updated successfully");
-  } catch (error) {
-    console.error("An error occurred:", error);
-  }
 }
 
 main().catch(error => {
