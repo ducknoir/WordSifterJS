@@ -63,7 +63,7 @@ async function main() {
     const html = await scrapeWebsite(usedWordsUrl);
     console.log("Website scraped successfully. Parsing HTML...");
     const wordsList = parseHtml(html);
-    console.log("HTML parsed successfully, got ${wordsList.length} words");
+    console.log(`HTML parsed successfully, got ${wordsList.length} words`);
 
     const githubToken = process.env.GIST_UPDATE_TOKEN;
     if (!githubToken) {
