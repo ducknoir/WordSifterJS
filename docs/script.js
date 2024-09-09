@@ -162,7 +162,7 @@ const App = (function() {
             const usedWordsData = JSON.parse(usedWordsContent);
             const usedWords = usedWordsData.map(item => item.w);
             console.log(usedWords);
-            sifter = new WordSifter(dictionaryData.words, );
+            sifter = new WordSifter(dictionaryData.words, usedWords);
     
             setupEventListeners();
         } catch (error) {
