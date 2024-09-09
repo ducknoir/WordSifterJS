@@ -22,6 +22,6 @@ jobs:
     - name: Run scraper and update Gist
       env:
         USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
-        GITHUB_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
+        GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: node scripts/update-used-words.js
