@@ -1,0 +1,27 @@
+name: Update Word List
+
+on:
+  schedule:
+    - cron: '11 37 * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm ci  # or yarn install
+      
+    - name: Run scraper and update Gist
+      env:
+        USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
+        GITHUB_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
+        GIST_ID: ${{ secrets.GIST_ID }}
+      run: node scripts/update-used-words.js
