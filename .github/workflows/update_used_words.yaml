@@ -2,14 +2,14 @@ name: Update Word List
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
+    - cron: '37 10 * * *'  # Runs at 10:37 UTC every day, 3:37 AM PDT
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
   update-gist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
       uses: actions/setup-node@v3
