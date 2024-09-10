@@ -79,13 +79,20 @@ async function main() {
         auth: githubToken,
     });
 
-    const gistFilename = 'used_words.json';
+    const jsonStr = JSON.stringify(wordsList, null, 2)
+          .replace(/(")\n  (\},?)/g, '$1$2')
+          .replace(/,\n    ("d")/g, ', $1')
+          .replace(/,\n    ("w")/g, ', $1')
+          .replace(/\{\n    ("n")/g, '{$1');
+        console.log(jsonStr);
+
     console.log('Updating gist...');
+    const gistFilename = 'used_words.json';
     await updateGist(
         octokit,
         gistId,
         gistFilename,
-        JSON.stringify(wordsList, null, 2)
+        jsonStr
     );
 
     console.log('Gist updated successfully');
