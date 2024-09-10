@@ -74,20 +74,19 @@ async function main() {
         throw new Error('GIST_ID is not set');
     }
 
-    console.log('Creating Octokit instance...');
+    // Convert the list of words to a JSON string, with one word record per line
+    const jsonStr = '[\n'
+                    + wordsList.map(item => JSON.stringify(item)).join(",\n")
+                    + '\n]';
+
+    // Now send the JSON string to the gist
+
     const octokit = new Octokit({
         auth: githubToken,
     });
 
-    const jsonStr = JSON.stringify(wordsList, null, 2)
-          .replace(/(")\n  (\},?)/g, '$1$2')
-          .replace(/,\n    ("d")/g, ', $1')
-          .replace(/,\n    ("w")/g, ', $1')
-          .replace(/\{\n    ("n")/g, '{$1');
-        console.log(jsonStr);
-
-    console.log('Updating gist...');
     const gistFilename = 'used_words.json';
+    console.log('Updating gist...');
     await updateGist(
         octokit,
         gistId,
