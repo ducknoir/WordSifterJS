@@ -27,4 +27,15 @@ jobs:
         USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
-      run: node scripts/update-used-words.js
+      run: |
+        for i in {1..15}  # Loop max 15 times (5 hours)
+        do
+          node scripts/update-used-words.js
+          if [ $? -eq 0 ]; then
+            echo "Resource updated, exiting."
+            exit 0
+          fi
+          echo "Resource not updated, sleeping for 20 minutes..."
+          sleep 1200  # 20 minutes
+        done
+        echo "Resource update not detected within time limit."
