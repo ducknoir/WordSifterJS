@@ -23,6 +23,7 @@ jobs:
       run: npm ci
       
     - name: Run scraper and update Gist
+      shell: bash
       env:
         USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
