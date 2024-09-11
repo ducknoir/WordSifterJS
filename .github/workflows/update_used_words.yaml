@@ -5,7 +5,7 @@ on:
     # The latest time when there's still an inhabited place (UTC-10) that hasn't rolled over to the next day is at 09:59 UTC.
     # The latest time when there's still an uninhabited place (UTC-12) that hasn't rolled over to the next day is at 11:59 UTC.
     # Observed update of source is between 4:00 AM and 4:20 AM PDT, 11:00 and 11:20 UTC.
-    - cron: '7 12 * * *'  # Runs at 12:07 UTC every day, 5:07 AM PDT.
+    - cron: '29 22 * * *'  # Runs at 12:07 UTC every day, 5:07 AM PDT.
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -41,9 +41,11 @@ jobs:
           fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "Manual trigger detected, exiting."
-            exit 0
+            exit 2
           fi
           echo "Resource not updated, sleeping for 1 minute"
           sleep 60
         done
         echo "Resource update not detected within time limit."
+        exit 1
+
