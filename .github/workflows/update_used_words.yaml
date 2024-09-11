@@ -29,15 +29,17 @@ jobs:
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
+        set +e  # Allow script to continue on non-zero exit codes
+
         echo "Entered workflow run: block"
-        for i in {1..15}  # Loop max 15 times (5 hours)
+        for i in {1..3}  # Loop max 3 times
         do
           node scripts/update-used-words.js
           if [ $? -eq 0 ]; then
             echo "Resource updated, exiting."
             exit 0
           fi
-          echo "Resource not updated, sleeping for 20 minutes..."
-          sleep 1200  # 20 minutes
+          echo "Resource not updated, sleeping for 1 minute"
+          sleep 60
         done
         echo "Resource update not detected within time limit."
