@@ -29,6 +29,7 @@ jobs:
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
       run: |
+        echo "Entered workflow run: block"
         for i in {1..15}  # Loop max 15 times (5 hours)
         do
           node scripts/update-used-words.js
