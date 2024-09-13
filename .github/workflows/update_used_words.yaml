@@ -35,7 +35,7 @@ jobs:
         set +e  # Allow script to continue on non-zero exit codes
 
         echo "Entered workflow run: block"
-        for i in {1..18}  # Loop max 18 times (6 hours)
+        for i in {1..36}  # Loop max 36 times (6 hours)
         do
           node ./update-used-words.js
           if [ $? -eq 0 ]; then
@@ -46,8 +46,8 @@ jobs:
             echo "Manual trigger detected, exiting."
             exit 2
           fi
-          echo "Resource not updated, sleeping for 1 minute"
-          sleep $((60 * 20)) # Sleep for 20 minutes
+          echo "Resource not updated, sleeping for 10 minutes"
+          sleep $((60 * 10)) # Sleep for 10 minutes
         done
         echo "Resource update not detected within time limit."
         exit 1
