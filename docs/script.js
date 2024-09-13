@@ -7,15 +7,7 @@ const App = (function () {
 
     let sifter;
 
-    const elements = {
-        guessInput: null,
-        feedbackInput: null,
-        updateButton: null,
-        resetButton: null,
-        guessGrid: null,
-        filteredWords: null,
-        wordCountHeading: null,
-    };
+    const elements = {};
 
     function updateGuessGrid(wordSifter) {
         elements.guessGrid.innerHTML = ''; // Clear previous entries
@@ -168,6 +160,18 @@ const App = (function () {
         }
     }
 
+    async function getUsedWords() {
+    // Fetch used words from GitHub Gist
+        const gistId = '2e18b28da88f9509e2b712805b541e1d';
+        const gistUrl = `https://api.github.com/gists/${gistId}`;
+        const gistResponse = await fetch(gistUrl);
+        const gistData = await gistResponse.json();
+        const usedWordsContent = gistData.files['used_words.json'].content;
+        const usedWordsData = JSON.parse(usedWordsContent);
+        const usedWords = usedWordsData.map((item) => item.w);
+        return usedWords;
+    }
+
     async function initializeApp() {
         try {
             initializeElements();
@@ -175,16 +179,9 @@ const App = (function () {
             // Fetch and load the dictionary JSON file
             const dictionaryResponse = await fetch('dictionary.json');
             const dictionaryData = await dictionaryResponse.json();
-
-            // Fetch used words from GitHub Gist
-            const gistId = '2e18b28da88f9509e2b712805b541e1d';
-            const gistUrl = `https://api.github.com/gists/${gistId}`;
-            const gistResponse = await fetch(gistUrl);
-            const gistData = await gistResponse.json();
-            const usedWordsContent = gistData.files['used_words.json'].content;
-            const usedWordsData = JSON.parse(usedWordsContent);
-            const usedWords = usedWordsData.map((item) => item.w);
+            const usedWords = await getUsedWords();
             console.log(usedWords);
+
             sifter = new WordSifter(dictionaryData.words, usedWords);
 
             setupEventListeners();
