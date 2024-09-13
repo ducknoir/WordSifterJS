@@ -1,5 +1,6 @@
 # Node.js dependencies
 node_modules/
+scripts/node_modules/
 
 # Logs
 logs/

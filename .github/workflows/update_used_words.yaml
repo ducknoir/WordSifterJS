@@ -23,20 +23,21 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
+      working-directory: ./scripts
       
     - name: Run scraper and update Gist
-      shell: bash
       env:
         USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
+      working-directory: ./scripts
       run: |
         set +e  # Allow script to continue on non-zero exit codes
 
         echo "Entered workflow run: block"
         for i in {1..18}  # Loop max 18 times (6 hours)
         do
-          node scripts/update-used-words.js
+          node ./update-used-words.js
           if [ $? -eq 0 ]; then
             echo "Resource updated, exiting."
             exit 0
