@@ -33,22 +33,23 @@ jobs:
       working-directory: ./scripts
       run: |
         set +e  # Allow script to continue on non-zero exit codes
+        TIMESTAMP_FORMAT='%Y-%m-%d %H:%M:%S'
 
-        echo "Entered workflow run: block"
+        # echo "$(date +"$TIMESTAMP_FORMAT") - Starting the build"
         for i in {1..36}  # Loop max 36 times (6 hours)
         do
           node ./update-used-words.js
           if [ $? -eq 0 ]; then
-            echo "Resource updated, exiting."
+            echo "$(date +"$TIMESTAMP_FORMAT") - List updated, exiting workflow."
             exit 0
           fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "Manual trigger detected, exiting."
+            echo "$(date +"$TIMESTAMP_FORMAT") - Manual trigger detected, exiting."
             exit 2
           fi
-          echo "Resource not updated, sleeping for 10 minutes"
+          echo "$(date +"$TIMESTAMP_FORMAT") - Resource not updated, sleeping for 10 minutes"
           sleep $((60 * 10)) # Sleep for 10 minutes
         done
-        echo "Resource update not detected within time limit."
+        echo "$(date +"$TIMESTAMP_FORMAT") - Resource update not detected within time limit."
         exit 1
 
