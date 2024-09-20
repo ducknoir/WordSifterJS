@@ -35,9 +35,10 @@ jobs:
         set +e  # Allow script to continue on non-zero exit codes
         TIMESTAMP_FORMAT='%Y-%m-%d %H:%M:%S'
 
-        # echo "$(date +"$TIMESTAMP_FORMAT") - Starting the build"
+        echo "$(date +"$TIMESTAMP_FORMAT") - Starting run script"
         for i in {1..36}  # Loop max 36 times (6 hours)
         do
+          echo "$(date +"$TIMESTAMP_FORMAT") - Invoking update-used-words.js"
           node ./update-used-words.js
           if [ $? -eq 0 ]; then
             echo "$(date +"$TIMESTAMP_FORMAT") - List updated, exiting workflow."
