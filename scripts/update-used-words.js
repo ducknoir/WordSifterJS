@@ -19,7 +19,7 @@ async function scrapeWebsite(sourceUrl) {
 
 function parseHtml(html) {
     const $ = cheerio.load(html);
-    const clist = $('#clist');
+    const clist = $('#chronlist');
     const lines = clist.text().split('\n').slice(1);
     const json = lines.map((line) => {
         const parts = line.split(' ');
