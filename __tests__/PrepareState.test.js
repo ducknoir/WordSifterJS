@@ -1,15 +1,16 @@
 // PrepareState.test.js
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 const dictPath = path.join(__dirname, '../docs/dictionary.json');
 
-// const WordSifter = require('../docs/WordSifter');
 import WordSifter from '../docs/WordSifter.js';
 
 describe('PrepareState', () => {
     test('Prepare with BINGO, BGYYB correctly sets blacks and yellows', () => {
-        const sifter = new WordSifter([]);
+        const words = ['BLING']
+        const usedWords = ['FUPPY']
+        const sifter = new WordSifter(words, usedWords);
   
         sifter.prepareState('BINGO', 'BGYYB');  // Updating the state
         expect(sifter._yellows_bag._map).toEqual(new Map([['N', 1], ['G', 1]]));
@@ -17,7 +18,9 @@ describe('PrepareState', () => {
     });
 
     test('Second prepare correctly changes state', () => {
-        const sifter = new WordSifter([]);
+        const words = ['BLING']
+        const usedWords = ['FUPPY']
+        const sifter = new WordSifter(words, usedWords);
   
         sifter.prepareState('BINGO', 'BGYYB');
         expect(sifter._yellows_bag._map).toEqual(new Map([['N', 1], ['G', 1]]));
@@ -41,10 +44,11 @@ describe('PrepareState', () => {
     test('reset correctly clears state', () => {
         const wordsObj = JSON.parse(fs.readFileSync(dictPath, 'utf8'));
         const words = wordsObj.words;
+        const usedWords = ['FUPPY']
         expect(Array.isArray(words)).toBe(true);
         expect(words.length).toEqual(14855);
 
-        const sifter = new WordSifter(words);
+        const sifter = new WordSifter(words, usedWords);
 
         expect(sifter.filteredWords.length).toEqual(words.length);
   
