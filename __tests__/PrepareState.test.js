@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const dictPath = path.join(__dirname, '../docs/dictionary.json');
 
-const WordSifter = require('../docs/WordSifter');
+// const WordSifter = require('../docs/WordSifter');
+import WordSifter from '../docs/WordSifter.js';
 
 describe('PrepareState', () => {
     test('Prepare with BINGO, BGYYB correctly sets blacks and yellows', () => {

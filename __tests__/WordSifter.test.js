@@ -1,6 +1,6 @@
 // WordSifter.test.js
 
-import WordSifter from '../docs/WordSifter.js'; // Use the .js extension for ES6 modules
+import WordSifter from '../docs/WordSifter.js';
 
 describe('WordSifter', () => {
   test('should initialize with the correct word list', () => {
