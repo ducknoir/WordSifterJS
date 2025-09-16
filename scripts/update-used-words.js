@@ -59,23 +59,31 @@ async function scrapeWebsite(sourceUrl) {
     return json;
 }
 
-async function getGistContent(octokit, gistId, filename) {
-    try {
-        const gist = await octokit.gists.get({ gist_id: gistId });
-        const fileContent = gist.data.files[filename]?.content || null;
-        if (!fileContent) {
-            console.log(`No content found for ${filename} in gist ${gistId}`);
-            return null;
+async function getGistContentRaw(gistId, filename) {
+    const owner = process.env.GIST_OWNER; // optional
+    const candidates = owner
+      ? [
+          `https://gist.githubusercontent.com/${owner}/${gistId}/raw/${filename}`,
+          `https://gist.github.com/${owner}/${gistId}/raw/${filename}`,
+        ]
+      : [
+          `https://gist.githubusercontent.com/${gistId}/raw/${filename}`,
+          `https://gist.github.com/${gistId}/raw/${filename}`,
+        ];
+  
+    for (const url of candidates) {
+      try {
+        const res = await fetch(url, { redirect: 'follow' });
+        if (res.ok) {
+          const text = await res.text();
+          return JSON.parse(text);
         }
-        const currentWordsList = JSON.parse(fileContent);
-        return currentWordsList;
-    } catch (error) {
-        console.error('Error fetching gist content:', error);
-        throw error;
+      } catch (_) {}
     }
+    return null;
 }
 
-async function updateGist(octokit, gistId, filename, jsonContent) {
+  async function updateGist(octokit, gistId, filename, jsonContent) {
     try {
         const response = await octokit.gists.update({
             gist_id: gistId,
@@ -122,8 +130,12 @@ async function main() {
     });
 
     // Get the current content of the gist
-    console.log('Fetching current gist content...');
-    const currentWordsList = await getGistContent(octokit, gistId, gistFilename);
+    console.log('Fetching current gist content (raw)…');
+    let currentWordsList = await getGistContentRaw(gistId, gistFilename);
+    if (!currentWordsList) {
+        console.log('Raw fetch failed; falling back to API…');
+        currentWordsList = await getGistContent(octokit, gistId, gistFilename);
+    }
 
     if (!currentWordsList) {
         console.log('No existing data found in gist, proceeding with update.');

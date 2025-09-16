@@ -31,6 +31,8 @@ jobs:
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
         APIFY_TOKEN: ${{ secrets.WORDSIFTER_APIFY_TOKEN }}
+        GIST_OWNER: ${{ github.repository_owner }}
+
       working-directory: ./scripts
       run: |
         set +e  # Allow script to continue on non-zero exit codes
