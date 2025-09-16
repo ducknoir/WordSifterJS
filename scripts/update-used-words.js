@@ -2,22 +2,47 @@ import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 import { Octokit } from '@octokit/rest';
 
+async function scrapeViaApify(sourceUrl) {
+    const token = process.env.APIFY_TOKEN;
+    const actorId = 'apify/cheerio-scraper'
+    const runRes = await fetch(`https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${token}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        startUrls: [{ url: sourceUrl }],
+        maxRequestsPerCrawl: 1,
+        proxyConfiguration: { useApifyProxy: true },
+        pageFunction: `async function pageFunction(context) {
+          const { $, request } = context;
+          return { url: request.url, chronlist: $('#chronlist').text() || '' };
+        }`,
+      }),
+    });
+    if (!runRes.ok) throw new Error(`Apify run start failed: ${runRes.status}`);
+    const run = await runRes.json();
+  
+    const waitRes = await fetch(`https://api.apify.com/v2/actor-runs/${run.data.id}?token=${token}&waitForFinish=120`);
+    const waited = await waitRes.json();
+    if (waited.data.status !== 'SUCCEEDED') throw new Error(`Apify run did not succeed: ${waited.data.status}`);
+  
+    const dsId = waited.data.defaultDatasetId;
+    const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${dsId}/items?token=${token}&clean=true&format=json`);
+    if (!itemsRes.ok) throw new Error('Failed to fetch Apify dataset items');
+    const items = await itemsRes.json();
+    return items[0]?.chronlist || '';
+}
+  
 async function scrapeWebsite(sourceUrl) {
-    let html;
-    try {
-        const sourceResponse = await fetch(sourceUrl);
-        if (!sourceResponse.ok) {
-            throw new Error(`HTTP error! status: ${sourceResponse.status}`);
-        }
-        html = await sourceResponse.text();
-    } catch (error) {
-        console.error('Failed to fetch the website:', error);
-        throw error;
+    if (process.env.APIFY_TOKEN) {
+      const chronText = await scrapeViaApify(sourceUrl);
+      return `<div id="chronlist">${chronText}</div>`;
     }
-    return html;
+    const res = await fetch(sourceUrl);
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    return await res.text();
 }
 
-function parseHtml(html) {
+  function parseHtml(html) {
     const $ = cheerio.load(html);
     const clist = $('#chronlist');
     const lines = clist.text().split('\n').slice(1);

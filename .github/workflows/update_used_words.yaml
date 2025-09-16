@@ -30,6 +30,7 @@ jobs:
         USED_WORDS_SOURCE_URL: ${{ secrets.USED_WORDS_SOURCE_URL }}
         GIST_UPDATE_TOKEN: ${{ secrets.GIST_UPDATE_TOKEN }}
         GIST_ID: ${{ secrets.GIST_ID }}
+        APIFY_TOKEN: ${{ secrets.WORDSIFTER_APIFY_TOKEN }}
       working-directory: ./scripts
       run: |
         set +e  # Allow script to continue on non-zero exit codes
