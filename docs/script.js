@@ -162,8 +162,11 @@ const App = (function () {
 
     async function getUsedWords() {
     // Fetch used words from GitHub Gist
+        const user = 'ducknoir';
         const gistId = '2e18b28da88f9509e2b712805b541e1d';
-        const gistUrl = `https://api.github.com/gists/${gistId}`;
+        const filename = 'used_words.json'; // exact file name in the gist
+        // const gistUrl = `https://api.github.com/gists/${gistId}`;
+        const gistUrl = `https://gist.githubusercontent.com/${user}/${gistId}/raw/${filename}`;
         const gistResponse = await fetch(gistUrl);
         const gistData = await gistResponse.json();
         const usedWordsContent = gistData.files['used_words.json'].content;
