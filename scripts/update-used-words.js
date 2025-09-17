@@ -126,7 +126,8 @@ async function main() {
     const gistFilename = 'used_words.json';
 
     const octokit = new Octokit({
-        auth: githubToken,
+        auth: process.env.GIST_UPDATE_TOKEN,
+        request: { headers: { 'X-GitHub-Api-Version': '2022-11-28' } },
     });
 
     // Get the current content of the gist
