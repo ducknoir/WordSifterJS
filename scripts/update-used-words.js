@@ -4,7 +4,7 @@ import { Octokit } from '@octokit/rest';
 
 async function scrapeViaApify(sourceUrl) {
     const token = process.env.APIFY_TOKEN;
-    const actorId = 'apify/cheerio-scraper'
+    const actorId = 'apify/cheerio-scraper';
     const runRes = await fetch(`https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${token}`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -96,7 +96,13 @@ async function getGistContentRaw(gistId, filename) {
 
         return response.data;
     } catch (error) {
-        console.error('Error updating gist:', error);
+        const status = error.status || error.response?.status;
+        const body = error.response?.data || error.message;
+        if (status === 401) {
+            console.error('Error updating gist: 401 Unauthorized. Likely expired/invalid GIST_UPDATE_TOKEN or missing "gist" scope.');
+        } else {
+            console.error('Error updating gist:', status, body);
+        }
         throw error;
     }
 }
@@ -132,11 +138,7 @@ async function main() {
 
     // Get the current content of the gist
     console.log('Fetching current gist content (raw)…');
-    let currentWordsList = await getGistContentRaw(gistId, gistFilename);
-    if (!currentWordsList) {
-        console.log('Raw fetch failed; falling back to API…');
-        currentWordsList = await getGistContent(octokit, gistId, gistFilename);
-    }
+    const currentWordsList = await getGistContentRaw(gistId, gistFilename);
 
     if (!currentWordsList) {
         console.log('No existing data found in gist, proceeding with update.');
