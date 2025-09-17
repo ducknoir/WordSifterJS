@@ -6,18 +6,19 @@ async function scrapeViaApify(sourceUrl) {
     const token = process.env.APIFY_TOKEN;
     const actorId = 'apify/cheerio-scraper';
     const runRes = await fetch(`https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${token}`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
         startUrls: [{ url: sourceUrl }],
         maxRequestsPerCrawl: 1,
         proxyConfiguration: { useApifyProxy: true },
         pageFunction: `async function pageFunction(context) {
-          const { $, request } = context;
-          return { url: request.url, chronlist: $('#chronlist').text() || '' };
+            const { $, request } = context;
+            return { url: request.url, chronlist: $('#chronlist').text() || '' };
         }`,
       }),
     });
+
     if (!runRes.ok) throw new Error(`Apify run start failed: ${runRes.status}`);
     const run = await runRes.json();
   
@@ -34,15 +35,15 @@ async function scrapeViaApify(sourceUrl) {
   
 async function scrapeWebsite(sourceUrl) {
     if (process.env.APIFY_TOKEN) {
-      const chronText = await scrapeViaApify(sourceUrl);
-      return `<div id="chronlist">${chronText}</div>`;
+        const chronText = await scrapeViaApify(sourceUrl);
+        return `<div id="chronlist">${chronText}</div>`;
     }
     const res = await fetch(sourceUrl);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     return await res.text();
 }
 
-  function parseHtml(html) {
+function parseHtml(html) {
     const $ = cheerio.load(html);
     const clist = $('#chronlist');
     const lines = clist.text().split('\n').slice(1);
@@ -72,18 +73,18 @@ async function getGistContentRaw(gistId, filename) {
         ];
   
     for (const url of candidates) {
-      try {
-        const res = await fetch(url, { redirect: 'follow' });
-        if (res.ok) {
-          const text = await res.text();
-          return JSON.parse(text);
-        }
-      } catch (_) {}
+        try {
+            const res = await fetch(url, { redirect: 'follow' });
+            if (res.ok) {
+                const text = await res.text();
+                return JSON.parse(text);
+            }
+        } catch (_) {}
     }
     return null;
 }
 
-  async function updateGist(octokit, gistId, filename, jsonContent) {
+async function updateGist(octokit, gistId, filename, jsonContent) {
     try {
         const response = await octokit.gists.update({
             gist_id: gistId,
@@ -148,8 +149,8 @@ async function main() {
             && newWordsList.length === currentWordsList.length
             && JSON.stringify(currentWordsList[0]) === JSON.stringify(newWordsList[0])
         ) {
-                console.log('No new data detected (first record matches). Exiting...');
-                process.exit(1); // No update needed, exit with non-zero to continue polling
+            console.log('No new data detected (first record matches). Exiting...');
+            process.exit(1); // No update needed, exit with non-zero to continue polling
         }
     }
 
