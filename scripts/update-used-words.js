@@ -129,12 +129,6 @@ async function main() {
         auth: githubToken,
     });
 
-    const me = await octokit.rest.users.getAuthenticated();
-    console.log('Updating as:', me.data.login);
-
-    const gistMeta = await (await fetch(`https://api.github.com/gists/${gistId}`, { headers: { 'X-GitHub-Api-Version': '2022-11-28' } })).json();
-    console.log('Gist owner is:', gistMeta?.owner?.login);
-
     // Get the current content of the gist
     console.log('Fetching current gist content (raw)…');
     let currentWordsList = await getGistContentRaw(gistId, gistFilename);
